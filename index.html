@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>StrmWrd: Seek Things that aRe coMmon While Reserving Differences</title>
+    <style type="text/css">
+      body {
+        margin: 1em 1.5em;
+        font-family: arial, lucinda, helvetica;
+        color: black;
+        background: white;
+      }
+      h1, h2, h3 {
+        text-align: center;
+        font-weight: normal; 
+      }
+      h2, h3 {
+        text-align: left;
+        background: #00BA4A;
+        padding: 5px;
+      }
+      h3 {
+        background: #00DF59;
+      }
+      td {vertical-align:top;}
+    </style>
+
+    <script type="text/javascript" src="mydata.js"></script>
+
+    <script type="text/javascript" src="lib/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="lib/rgbcolor.js"></script>
+    <script type="text/javascript" src="lib/jquery.wordcloud.diffwordle.js"></script>
+    <script type="text/javascript" src="lib/d3/d3.js"></script>
+    <script type="text/javascript" src="lib/d3-cloud/d3.layout.cloud.js"></script>
+    <script type="text/javascript" src="lib/highcharts.js"></script>
+    <script type="text/javascript" src="wordle/wordanalyzer.js"></script>
+    <script type="text/javascript" src="wordle/diffwordle.js"></script>
+    <script type="text/javascript" src="wordle/stopwords.js"></script>
+    <script type="text/javascript" src="trends/difftrends.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+
+    <script type="text/javascript">
+      var loadExample = function() {
+        document.getElementById('trendsdata').value = JSON.stringify(mydata);
+        updateTrends();
+      };
+
+      var updateTrends = function() {
+        DiffTrends.init(JSON.parse(document.getElementById('trendsdata').value), 'trendcontrols', 'trendcontainer', function(graphdata) {
+          var texts = concattxtforwordle(graphdata);
+          document.getElementById('wordletext').value = JSON.stringify(texts);
+        });
+      };
+
+      var updateWordle = function() {
+        var str = document.getElementById('wordletext').value;
+        var text = "";
+        try {
+          text = JSON.parse(str);
+        } catch (err) {
+          text = str;
+        }
+        DiffWordle.draw(text, 'cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+      };
+    </script>
+  </head>
+  <body onload="loadExample();">
+
+    <!-- leftcontent -->
+    <div id="leftcontent" style="position:fixed; background:none repeat scroll 0% 0% lightblue; padding:5px; left:5px; border:1px solid black;">
+      [&nbsp;<a href="http://wing.comp.nus.edu.sg/">WING homepage</a>&nbsp;]<br/>
+      [&nbsp;<a href="http://wing.comp.nus.edu.sg/portal/web-services.html">WING web services</a>&nbsp;]&nbsp;<br/>
+      <br/>
+      [&nbsp;<a href="#top">StrmWrd</a>&nbsp;]<br/>
+      [&nbsp;<a href="#demo">Demo</a>&nbsp;]<br/>
+      [&nbsp;<a href="#download">Download</a>&nbsp;]<br/>
+      [&nbsp;<a href="#license">License</a>&nbsp;]</br/>
+      [&nbsp;<a href="#usage">Usage</a>&nbsp;]<br/>
+      [&nbsp;<a href="#wordseg">Word Segmentation</a>&nbsp;]<br/>
+      <!--[&nbsp;<a href="#gm">Group Members</a>&nbsp;]<br/>
+      [&nbsp;<a href="#faq">FAQ</a>&nbsp;]<br/>
+      [&nbsp;<a href="#t">Troubleshooting</a>&nbsp;]<br/> -->
+    </div>
+
+    <!-- centercontent -->
+    <script>
+      
+    </script>
+    <div id="centercontent" style="position:absolute;left:200px;padding:10px;">
+
+      <a name='top'></a><h1>StrmWrd: Seek Things that aRe coMmon While Reserving Differences</h1>
+      <p>StrmWrd (pronounced as Stream-Word) is a visualization tool for trends and texts comparison among different resources, written in JavaScript with front-end techniques.</p>
+      <p>As the name suggests, StrmWrd has two components, used either individually or together:</p>
+      <ul>
+        <li>DiffTrends (Stream): A stacked area chart showing the trends among different resources.</li>
+        <li>DiffWordle (Word): A frequency-based word cloud, where the color of a word represents its resource.</li>
+      </ul>
+
+      <a name='demo'></a><h2>Demo</h2>
+      <table border='0'>
+        <tr><th>Trends data</th><th>DiffTrends</th><th>DiffWordle</th><th>Text</th></tr>
+        <tr>
+          <td><textarea id='trendsdata' style='width:350px; height:200px; margin:0'></textarea></td><td><div id="trendcontrols"></div>
+              <div id="trendcontainer" style="width:350px; height:200px; margin:0"></div></td>
+          <td><div id="cloudcontainer"></div></td><td><textarea id='wordletext' style='width:350px; height:200px; margin:0'></textarea></td>
+        </tr>
+        <tr><td align='center'><input type='button' value='Update Trends =>' onclick='updateTrends();'/></td><td colspan='2' align='center'><input type='button' value='Load Example' onclick='loadExample();'/></td><td align='center'><input type='button' value='<= Update Wordle' onclick='updateWordle();'/> Hint: Try a piece of plain text!</td></tr>
+      </table>
+
+      <a name='download'></a><h2>Download</h2>
+      <p>Currently on GitHub <a href='https://github.com/CAQ/diffviewer' target='_blank'>diffviewer</a>.</p>
+
+      <a name='license'></a><h2>License and Third-party Libraries</h2>
+      We use several third-party libraries for the modules. Please follow their individual licenses. For our integrating part, use it as you like.
+      <ul>
+        <li><a href="http://www.highcharts.com/" target="_blank">Highcharts</a></li>
+        <li><a href="http://www.phpied.com/rgb-color-parser-in-javascript/" target="_blank">RGB color parser</a></li>
+        <li><a href="http://www.jasondavies.com/wordcloud" target="_blank">d3-cloud</a></li>
+        <li><a href="http://timc.idv.tw/wordcloud/en/" target="_blank">HTML5 word cloud</a></li>
+      </ul>
+
+      <a name='usage'></a><h2>Usage</h2>
+
+<table border=1 width='100%'>
+
+<tr>
+<th width='50%'>DiffTrends</th>
+<th width='50%'>DiffWordle</th>
+</tr>
+
+<tr><td colspan=2 align='center'>Script files</td></tr>
+<tr>
+<td>
+<pre>
+trends/difftrends.js
+lib/highcharts.js
+</pre>
+</td>
+<td>
+<pre>
+wordle/diffwordle.js
+lib/rgbcolor.js
+</pre>
+Required if word segmentation is needed:
+<pre>
+wordle/wordanalyzer.js
+wordle/stopwords.js
+</pre>
+Required for type-0 (default) cloud chart:
+<pre>
+lib/d3/d3.js
+lib/d3-cloud/d3.layout.cloud.js
+</pre>
+Required for type-1 cloud chart:
+<pre>
+lib/jquery-1.7.2.min.js
+lib/jquery.wordcloud.diffwordle.js
+</pre>
+Required if the trends data is later used for wordle:
+<pre>
+common.js
+</pre>
+</td>
+</tr>
+
+<tr><td colspan=2 align='center'>Containers</td></tr>
+<tr>
+<td>
+<pre>
+&lt;div id="trendcontrols"&gt;&lt;/div&gt;
+&lt;div id="trendcontainer" style="width:350px; height:200px; margin:0"&gt;&lt;/div&gt;
+</pre>
+</td>
+<td>
+<pre>
+&lt;div id="cloudcontainer"&gt;&lt;/div&gt;
+</pre>
+</td>
+</tr>
+
+<tr><td colspan=2 align='center'>Data format</td></tr>
+<tr>
+<td>
+<pre>
+var mydata = {
+  heads: ['datetime', 'source', 'freq', 'region', 'titleanddesc'], 
+  x: 'datetime', y: 'freq', facets: ['source', 'region'], text: 'titleanddesc', granularity: 'day',
+  options: {
+    selectClass: 'input-small',
+    facetColors: {'source':{'新浪网':'#4572A7', '搜狐':'#AA4643', '华尔街日报':'#89A54E', 
+        'Yahoo! News':'#80699B', 'Reuters':'#3D96AE'}},
+    logY: false
+  },
+  data: [
+    [1335780000,"新浪网",1,"CN","鸿海第一财季利润未达预期 股价跌停 新浪科技讯 
+        北京时间4月30日下午消息，由于第一财季利润未达市场预期，鸿海今天在台北股票交易所跌停。"],
+    ...
+  ]
+};
+</pre>
+          <p>
+            The "heads" should contain at least three columns for the x-axis, y-axis (value) and a facet for comparison. The name of these fields are arbitary, as long as you assigned the corresponding name in "x", "y" and "facets".</br>
+            The "text" specifies the piece of text of that record. It can be used for the word cloud part.</br>
+            The "granularity" can be set to year, month, day, hour, minute or second. The frequencies of records from a same period (during a same year / month / ...) will be combined and shown as one x-point in the graph.</br>
+            The "data" is a list of records, where each of the records is also in a list, where the columns are of the same order as "heads".
+          </p>
+          We support the following options:
+          <ul>
+            <li>selectClass: The css class for the &lt;select&gt; controlling object.</li>
+            <li>facetColors: Dicts of palettes for different colors of the values within a facet.</li>
+            <li>logY: A boolean for drawing the y-axis in logarithmic scale. Not recommend since the stacked graph will be misleading for the upper series.</li>
+          </ul>
+</td>
+<td>
+Can be a string, a hashtable or a list of series.
+<ul>
+<li>String: We'll do a word segmentation with the string.</li>
+<pre>
+var text = "A piece of text with Chinese characters, 就像这样。";
+</pre>
+<li>Hashtable: A javascript dictionary of words and their frequencies.</li>
+<pre>
+var dict = {'word1':5, 'word2':3, 'word3':2};
+</pre>
+<li>List of series: A javascript list [] where each of the elements is an object: {"color": c, "weight": w, "text": t}. c is the color of the whole series, w is the weight applied to the whole series (applied multiplicative to the word frequencies), t is a string or a hashtable (as above).</li>
+<pre>
+var list = [{"color":"red", "weight":1, "text":"Hello, world!"}, 
+            {"color":"#0000ff", "weight":2, "text":"A quick fox jumps over the lazy dog."};
+</pre>
+</ul>
+</td>
+</tr>
+
+<tr><td colspan=2 align='center'>Draw</td></tr>
+<tr>
+<td>
+<pre>
+DiffTrends.init(mydata, 'trendcontrols', 'trendcontainer', concattxtforwordle);
+</pre>
+where the last argument is a function executed when drawing the trends is finished. Here we extract the words from the trends' texts and invoke the wordle chart.
+</td>
+<td>
+<pre>
+DiffWordle.draw(texts, 'cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+</pre>
+<p>The three arguments are the text object (String, hashtable, or list of series), id of the container, and options.</p>
+<p>We support the following options:</p>
+<ul>
+<li>type: 0 or 1, using different libraries. Default 0.</li>
+<li>width: The width of the chart, numerical value, default 350.</li>
+<li>height: The height of the chart, numerical value, default 200.</li>
+<li>scale: Optional. String or a function. If non-exist, use the given weight. If a string of "log" of "sqrt", use the logarithmic or square root of the original weight. If function:</li>
+<pre>
+'scale': function (w) { return Math.log(w * 10 + 1); }
+</pre>
+</ul>
+</td>
+</tr>
+
+</table>
+
+      <a name='wordseg'></a><h2>Word Segmentation Module</h2>
+      Due to the cross-domain restriction of Javascript, we run a script on the server (seg.php) to send a POST request to a word segmentation Web service <a href="http://www.caq9.info/mmseg/" target="_blank">http://www.caq9.info/mmseg/</a>.
+
+      <hr/>
+      <h5><address>Co-work by <a href="http://www.thuir.org/" target="_blank">THUIR</a> and <a href="http://wing.comp.nus.edu.sg/" target="_blank">WING</a> under the Tsinghua-NUS <a href="http://next.comp.nus.edu.sg/" target="_blank">NExT</a> Search Centre, 2012</address></h5>
+    </div>
+  </body>
+</html>

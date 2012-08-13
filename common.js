@@ -10,4 +10,5 @@ var concattxtforwordle = function(graphsrs) {
     texts.push({"text": t, "color": oneseries.color, "weight": totalfreq});
   }
   DiffWordle.draw(texts, 'cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+  return texts;
 };

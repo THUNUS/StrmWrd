@@ -7,7 +7,7 @@ var DiffTrends = (function() {
   // color dictionary
   var presetcolors = ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE', '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92'];
   var graycolor = '#888888';
-  var facetvaluecolors = []; // the list contains color-dict of each facet
+  var facetvaluecolors = []; // a list containing the color-dict of each facet
   var drawcallbackfcn = null; // a call back function after each draw();
 
   // chart container for drawing
@@ -166,6 +166,7 @@ var DiffTrends = (function() {
       // the control box, "select" for facets, facet values and "button" for drawing
       var html = "Facet: ";
       html += "<select id='mytrendfacetname' onchange ='DiffTrends.updateFacetValues();DiffTrends.draw();'" + (options.selectClass ? "class='" + options.selectClass + "'" : "") + ">";
+      facetvaluecolors = [];
       for (var idx = 0; idx < datatable.facets.length; idx++) {
         html += "<option value='" + datatable.facets[idx] + "'>" + datatable.facets[idx] + "</option>";
         // also initialize the color list

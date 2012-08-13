@@ -3,7 +3,7 @@
         x: 'datetime', y: 'freq', facets: ['source', 'region'], text: 'titleanddesc', granularity: 'day',
         options: {
           selectClass: 'input-small',
-          facetColors: {'resource': ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE', '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92']},
+          facetColors: {'source':{'新浪网':'#4572A7', '搜狐':'#AA4643', '华尔街日报':'#89A54E', 'Yahoo! News':'#80699B', 'Reuters':'#3D96AE'}},
           logY: false
         },
         data: [
