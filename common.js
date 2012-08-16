@@ -9,5 +9,5 @@ var concattxtforwordle = function(graphsrs) {
     }
     texts.push({"text": t, "color": oneseries.color, "weight": totalfreq});
   }
-  diffwordle1.draw(texts);
+  return texts;
 };

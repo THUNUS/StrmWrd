@@ -40,6 +40,7 @@
     <script type="text/javascript" src="common.js"></script>
 
     <script type="text/javascript">
+      var difftrends = null;
       var diffwordle1 = null, diffwordle2 = null;
 
       var loadExamples = function() {
@@ -52,8 +53,9 @@
       };
 
       var updateTrends = function() {
-        DiffTrends.init(JSON.parse(document.getElementById('trendsdata').value), 'trendcontrols', 'trendcontainer', function(graphdata) {
-          concattxtforwordle(graphdata);
+        difftrends = new DiffTrends(JSON.parse(document.getElementById('trendsdata').value), 'trendcontrols', 'trendcontainer', 'difftrends', function(graphdata) {
+          var texts = concattxtforwordle(graphdata);
+          diffwordle1.draw(texts);
         });
       };
 
@@ -115,8 +117,8 @@
         <tr><td align='center'><input type='button' value='Update Trends =>' onclick='updateTrends();'/></td><td colspan='2' align='center'><input type='button' value='Load Example' onclick='loadExample();'/></td></tr>
       </table>
 
-      <a name='demo2'></a><h2>Demo 2: DiffWordle Only</h2>
-      <p>DiffWordle also accepts plain texts. You can try it here.</p>
+      <a name='demo2'></a><h2>Demo 2: Plain-text DiffWordle</h2>
+      <p>DiffWordle accepts plain texts, where the words are colored randomly.</p>
       <table border='0'>
         <tr><th>Text</th><th>DiffWordle</th></tr>
         <tr>
@@ -204,10 +206,12 @@ common.js
 <pre>
 var mydata = {
   heads: ['datetime', 'source', 'freq', 'region', 'titleanddesc'], 
-  x: 'datetime', y: 'freq', facets: ['source', 'region'], text: 'titleanddesc', granularity: 'day',
+  x: 'datetime', y: 'freq', facets: ['source', 'region'], 
+  text: 'titleanddesc', granularity: 'day',
   options: {
     selectClass: 'input-small',
-    facetColors: {'source':{'新浪网':'#4572A7', '搜狐':'#AA4643', '华尔街日报':'#89A54E', 
+    facetColors: {'source':{'新浪网':'#4572A7', 
+        '搜狐':'#AA4643', '华尔街日报':'#89A54E', 
         'Yahoo! News':'#80699B', 'Reuters':'#3D96AE'}},
     logY: false
   },
@@ -244,8 +248,10 @@ var dict = {'word1':5, 'word2':3, 'word3':2};
 </pre>
 <li>List of series: A javascript list [] where each of the elements is an object: {"color": c, "weight": w, "text": t}. c is the color of the whole series, w is the weight applied to the whole series (applied multiplicative to the word frequencies), t is a string or a hashtable (as above).</li>
 <pre>
-var list = [{"color":"red", "weight":1, "text":"Hello, world!"}, 
-            {"color":"#0000ff", "weight":2, "text":"A quick fox jumps over the lazy dog."};
+var list = [{ "color":"red", "weight":1, 
+              "text":"Hello, world!" }, 
+            { "color":"#0000ff", "weight":2, 
+              "text":"A quick fox jumps over the lazy dog." };
 </pre>
 </ul>
 </td>
@@ -255,13 +261,17 @@ var list = [{"color":"red", "weight":1, "text":"Hello, world!"},
 <tr>
 <td>
 <pre>
-DiffTrends.init(mydata, 'trendcontrols', 'trendcontainer', concattxtforwordle);
+var difftrends = new DiffTrends(mydata, 
+    'trendcontrols', 'trendcontainer', 
+    'difftrends', concattxtforwordle);
 </pre>
-where the last argument is a function executed when drawing the trends is finished. Here we extract the words from the trends' texts and invoke the wordle chart.
+The second-to-the-last argument is the variable name. We need to add events to the controler, so you need to specify the variable name and we'll render it to the onchange event. The last argument is a function executed when drawing the trends is finished. Here we extract the words from the trends' texts and invoke the wordle chart.
 </td>
 <td>
 <pre>
-var diffwordle = new DiffWordle('cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+var diffwordle = new DiffWordle('cloudcontainer', 
+                     { 'width':350, 'height':200, 
+                       'type':0, 'scale':'log' });
 diffwordle.draw(texts);
 </pre>
 <p>The two arguments for the initialization are the id of the container and options.  The argument for drawing is the text object (String, hashtable, or list of series).</p>
