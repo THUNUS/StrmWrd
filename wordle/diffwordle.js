@@ -202,6 +202,7 @@ var DiffWordle = function(containerid, options) {
   // given the word list, draw the cloud
   // note we have two types of libs for drawing
   this.drawCloud = function (list) {
+    var thewordle = this;
     // create svg or canvas depending on the "type" option
     if (this.wordleoptions['type'] == 0) { // svg using d3-cloud
       var container = document.getElementById(this.wordlecontainerid);
@@ -210,7 +211,6 @@ var DiffWordle = function(containerid, options) {
       while (containersvg.lastChild) {
         containersvg.removeChild(containersvg.lastChild);
       }
-      var thewordle = this;
       d3.layout.cloud().size([this.wordleoptions['width'], this.wordleoptions['height']])
         .timeInterval(10)
         .words(list.map(function(d) {
@@ -243,8 +243,8 @@ var DiffWordle = function(containerid, options) {
         .start();
     } else { // canvas using html5-wordcloud
       jQuery(function ($) {
-        var containerid = this.wordlecontainerid + "_wordle" + new Date().getTime();
-        document.getElementById(this.wordlecontainerid).innerHTML = '<canvas id="' + containerid + '" width="' + this.wordleoptions['width'] + '" height="' + this.wordleoptions['height'] + '"></canvas>';
+        var containerid = thewordle.wordlecontainerid + "_wordle" + new Date().getTime();
+        document.getElementById(thewordle.wordlecontainerid).innerHTML = '<canvas id="' + containerid + '" width="' + thewordle.wordleoptions['width'] + '" height="' + thewordle.wordleoptions['height'] + '"></canvas>';
         var $r = $('#' + containerid);
         $r.wordCloud({
           wordList: list,
@@ -253,7 +253,7 @@ var DiffWordle = function(containerid, options) {
           clearCanvas: true,
           drawMask: false,
           wordColor: function(word, weight, fontSize, radius, theta) {
-            return this.getColor(word);
+            return thewordle.getColor(word);
           }
         });
       });
