@@ -40,15 +40,20 @@
     <script type="text/javascript" src="common.js"></script>
 
     <script type="text/javascript">
-      var loadExample = function() {
+      var diffwordle1 = null, diffwordle2 = null;
+
+      var loadExamples = function() {
+        diffwordle1 = new DiffWordle('cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+        diffwordle2 = new DiffWordle('cloudcontainer2', {'width':350, 'height':200, 'type':0, 'scale':'log'});
         document.getElementById('trendsdata').value = JSON.stringify(mydata);
+        document.getElementById('wordletext').value = "中国概念股周五涨跌互现6支股票跌幅超3% 新浪科技讯 北京时间4月21日凌晨消息，周五美国股市收盘涨跌不一，至此道指与标普500指数全周收高，纳指微跌。微软与GE等企业财报好于预期。IMF已获多国注资承诺，提振了市场情绪。中国概念股涨跌互现，个股无太大涨跌幅，有6支股票跌幅超3%。ATT posts better-than-expected profit in Q1 ATT on Tuesday reported its results for the first quarter of 2012. Following a record holiday quarter that saw the nation’s No.2 carrier pull in 0.42 per share excluding one-time charges on sales of 32.5 billion, analysts were expecting first-quarter EPS of 0.57 on revenue totaling 31.85 billion. The company beat expectations, posting a profit of 0.60 per share on in-line sales of 31.8 billion. ATT activated 3.6 million iPhones during the first quarter last year, and that number climbed to 4.3 million in the first quarter of 2012, down seasonally from a record 7.6 million during the holiday quarter. Total smartphone sales for the first quarter this year came in at 5.5 million, in line with the 5.5 million smartphones it sold in";
         updateTrends();
+        updateWordle();
       };
 
       var updateTrends = function() {
         DiffTrends.init(JSON.parse(document.getElementById('trendsdata').value), 'trendcontrols', 'trendcontainer', function(graphdata) {
-          var texts = concattxtforwordle(graphdata);
-          document.getElementById('wordletext').value = JSON.stringify(texts);
+          concattxtforwordle(graphdata);
         });
       };
 
@@ -60,11 +65,11 @@
         } catch (err) {
           text = str;
         }
-        DiffWordle.draw(text, 'cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+        diffwordle2.draw(text);
       };
     </script>
   </head>
-  <body onload="loadExample();">
+  <body onload="loadExamples();">
 
     <!-- leftcontent -->
     <div id="leftcontent" style="position:fixed; background:none repeat scroll 0% 0% lightblue; padding:5px; left:5px; border:1px solid black;">
@@ -72,7 +77,8 @@
       [&nbsp;<a href="http://wing.comp.nus.edu.sg/portal/web-services.html">WING web services</a>&nbsp;]&nbsp;<br/>
       <br/>
       [&nbsp;<a href="#top">StrmWrd</a>&nbsp;]<br/>
-      [&nbsp;<a href="#demo">Demo</a>&nbsp;]<br/>
+      [&nbsp;<a href="#demo1">Demo1</a>&nbsp;]<br/>
+      [&nbsp;<a href="#demo2">Demo2</a>&nbsp;]<br/>
       [&nbsp;<a href="#download">Download</a>&nbsp;]<br/>
       [&nbsp;<a href="#license">License</a>&nbsp;]</br/>
       [&nbsp;<a href="#usage">Usage</a>&nbsp;]<br/>
@@ -95,16 +101,29 @@
         <li>DiffTrends (Stream): A stacked area chart showing the trends among different resources.</li>
         <li>DiffWordle (Word): A frequency-based word cloud, where the color of a word represents its resource.</li>
       </ul>
+      <p>Note if you use the two components together, the DiffTrends will control the DiffWordle, i.e., DiffTrends is rendered before DiffWordle.</p>
 
-      <a name='demo'></a><h2>Demo</h2>
+      <a name='demo1'></a><h2>Demo 1: DiffTrends + DiffWordle</h2>
+      <p>The advanced way to use the two components is input JavaScript objects  to them. Here it shows most of the functionalities.</p>
       <table border='0'>
-        <tr><th>Trends data</th><th>DiffTrends</th><th>DiffWordle</th><th>Text</th></tr>
+        <tr><th>Trends data</th><th>DiffTrends</th><th>DiffWordle</th></tr>
         <tr>
           <td><textarea id='trendsdata' style='width:350px; height:200px; margin:0'></textarea></td><td><div id="trendcontrols"></div>
               <div id="trendcontainer" style="width:350px; height:200px; margin:0"></div></td>
-          <td><div id="cloudcontainer"></div></td><td><textarea id='wordletext' style='width:350px; height:200px; margin:0'></textarea></td>
+          <td><div id="cloudcontainer"></div></td>
         </tr>
-        <tr><td align='center'><input type='button' value='Update Trends =>' onclick='updateTrends();'/></td><td colspan='2' align='center'><input type='button' value='Load Example' onclick='loadExample();'/></td><td align='center'><input type='button' value='<= Update Wordle' onclick='updateWordle();'/> Hint: Try a piece of plain text!</td></tr>
+        <tr><td align='center'><input type='button' value='Update Trends =>' onclick='updateTrends();'/></td><td colspan='2' align='center'><input type='button' value='Load Example' onclick='loadExample();'/></td></tr>
+      </table>
+
+      <a name='demo2'></a><h2>Demo 2: DiffWordle Only</h2>
+      <p>DiffWordle also accepts plain texts. You can try it here.</p>
+      <table border='0'>
+        <tr><th>Text</th><th>DiffWordle</th></tr>
+        <tr>
+          <td><textarea id='wordletext' style='width:350px; height:200px; margin:0'></textarea></td>
+          <td><div id="cloudcontainer2"></div></td>
+        </tr>
+        <tr><td align='center'><input type='button' value='Update Wordle =>' onclick='updateWordle();'/></td></tr>
       </table>
 
       <a name='download'></a><h2>Download</h2>
@@ -118,6 +137,7 @@
         <li><a href="http://www.jasondavies.com/wordcloud" target="_blank">d3-cloud</a></li>
         <li><a href="http://timc.idv.tw/wordcloud/en/" target="_blank">HTML5 word cloud</a></li>
       </ul>
+      The name "wordle" comes from <a href='http://www.wordle.net/' target='_blank'>wordle.net</a>.
 
       <a name='usage'></a><h2>Usage</h2>
 
@@ -241,9 +261,10 @@ where the last argument is a function executed when drawing the trends is finish
 </td>
 <td>
 <pre>
-DiffWordle.draw(texts, 'cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+var diffwordle = new DiffWordle('cloudcontainer', {'width':350, 'height':200, 'type':0, 'scale':'log'});
+diffwordle.draw(texts);
 </pre>
-<p>The three arguments are the text object (String, hashtable, or list of series), id of the container, and options.</p>
+<p>The two arguments for the initialization are the id of the container and options.  The argument for drawing is the text object (String, hashtable, or list of series).</p>
 <p>We support the following options:</p>
 <ul>
 <li>type: 0 or 1, using different libraries. Default 0.</li>
