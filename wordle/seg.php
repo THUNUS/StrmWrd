@@ -129,5 +129,5 @@ function _http_parse_headers ($header) {
         return ($hex == dechex($dec));
     } 
 
-echo post_request('http://www.caq9.info/mmseg/', array('t' => $_REQUEST['t'], 'removestop' => ''));
+echo post_request('http://wing.comp.nus.edu.sg/~caq/mmseg/', array('t' => $_REQUEST['t'], 'removestop' => ''));
 ?>
